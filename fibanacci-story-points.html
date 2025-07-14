@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fibonacci Story Point Matrix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gemini-dark': '#0f0f23',
+                        'gemini-card': '#1a1a2e',
+                        'gemini-purple': '#8b5cf6',
+                        'gemini-blue': '#3b82f6',
+                        'gemini-text': '#e5e7eb',
+                        'gemini-accent': '#6366f1'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .criterion-card {
+            transition: all 0.2s ease;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        .criterion-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+        .fibonacci-btn {
+            transition: all 0.15s ease;
+        }
+        .fibonacci-btn:hover {
+            transform: scale(1.05);
+        }
+        .fibonacci-btn.selected {
+            box-shadow: 0 0 0 2px #8b5cf6;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        }
+        .result-card {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+    </style>
+</head>
+<body class="h-screen bg-gemini-dark text-gemini-text overflow-hidden">
+    <div class="h-full flex flex-col">
+        <!-- Header -->
+        <header class="bg-gemini-card border-b border-gray-700 px-6 py-3">
+            <div>
+                <h1 class="text-xl font-semibold text-white">Fibonacci Story Point Matrix</h1>
+                <p class="text-sm text-gray-400">Estimate user stories across multiple dimensions</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex gap-6 p-4">
+            <!-- Left Panel (70% width) -->
+            <div class="w-[70%] flex flex-col gap-4">
+                <!-- Row 1: Time & Complexity -->
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Time -->
+                    <div class="criterion-card rounded-lg border border-gray-700 p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-white">Time</h3>
+                                    <p class="text-sm text-gray-400">Duration to complete</p>
+                                </div>
+                            </div>
+                            <span class="selected-value text-2xl font-bold text-blue-400">-</span>
+                        </div>
+                        <div class="fibonacci-selection" data-criterion="time">
+                            <div class="grid grid-cols-8 gap-2">
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-blue-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="1">1</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-blue-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="2">2</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-blue-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="3">3</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-blue-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="5">5</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-blue-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="8">8</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-blue-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="13">13</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-blue-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="21">21</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-blue-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="34">34</button>
+                            </div>
+                        </div>
+                        <div class="mt-4 min-h-[3rem] px-2">
+                            <p class="criterion-description text-base text-gray-300 font-medium leading-relaxed">Select a value to see description</p>
+                        </div>
+                    </div>
+
+                    <!-- Complexity -->
+                    <div class="criterion-card rounded-lg border border-gray-700 p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-white">Complexity</h3>
+                                    <p class="text-sm text-gray-400">Technical difficulty</p>
+                                </div>
+                            </div>
+                            <span class="selected-value text-2xl font-bold text-purple-400">-</span>
+                        </div>
+                        <div class="fibonacci-selection" data-criterion="complexity">
+                            <div class="grid grid-cols-8 gap-2">
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-purple-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="1">1</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-purple-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="2">2</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-purple-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="3">3</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-purple-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="5">5</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-purple-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="8">8</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-purple-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="13">13</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-purple-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="21">21</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-purple-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="34">34</button>
+                            </div>
+                        </div>
+                        <div class="mt-4 min-h-[3rem] px-2">
+                            <p class="criterion-description text-base text-gray-300 font-medium leading-relaxed">Select a value to see description</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Risk & Effort -->
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Risk -->
+                    <div class="criterion-card rounded-lg border border-gray-700 p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center mr-3">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-white">Risk</h3>
+                                    <p class="text-sm text-gray-400">Potential for failure</p>
+                                </div>
+                            </div>
+                            <span class="selected-value text-2xl font-bold text-red-400">-</span>
+                        </div>
+                        <div class="fibonacci-selection" data-criterion="risk">
+                            <div class="grid grid-cols-8 gap-2">
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-red-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="1">1</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-red-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="2">2</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-red-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="3">3</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-red-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="5">5</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-red-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="8">8</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-red-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="13">13</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-red-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="21">21</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-red-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="34">34</button>
+                            </div>
+                        </div>
+                        <div class="mt-4 min-h-[3rem] px-2">
+                            <p class="criterion-description text-base text-gray-300 font-medium leading-relaxed">Select a value to see description</p>
+                        </div>
+                    </div>
+
+                    <!-- Effort -->
+                    <div class="criterion-card rounded-lg border border-gray-700 p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-white">Effort</h3>
+                                    <p class="text-sm text-gray-400">Resource requirements</p>
+                                </div>
+                            </div>
+                            <span class="selected-value text-2xl font-bold text-green-400">-</span>
+                        </div>
+                        <div class="fibonacci-selection" data-criterion="effort">
+                            <div class="grid grid-cols-8 gap-2">
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-green-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="1">1</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-green-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="2">2</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-green-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="3">3</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-green-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="5">5</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-green-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="8">8</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-green-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="13">13</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-green-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="21">21</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-green-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="34">34</button>
+                            </div>
+                        </div>
+                        <div class="mt-4 min-h-[3rem] px-2">
+                            <p class="criterion-description text-base text-gray-300 font-medium leading-relaxed">Select a value to see description</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Uncertainty -->
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Uncertainty -->
+                    <div class="criterion-card rounded-lg border border-gray-700 p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-yellow-600 rounded-lg flex items-center justify-center mr-3">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-white">Uncertainty</h3>
+                                    <p class="text-sm text-gray-400">Requirement clarity</p>
+                                </div>
+                            </div>
+                            <span class="selected-value text-2xl font-bold text-yellow-400">-</span>
+                        </div>
+                        <div class="fibonacci-selection" data-criterion="uncertainty">
+                            <div class="grid grid-cols-8 gap-2">
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-yellow-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="1">1</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-yellow-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="2">2</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-yellow-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="3">3</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-yellow-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="5">5</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-yellow-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="8">8</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-yellow-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="13">13</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-yellow-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="21">21</button>
+                                <button class="fibonacci-btn bg-gray-700 hover:bg-yellow-600 text-white border border-gray-600 rounded-lg py-3 text-sm font-medium" data-value="34">34</button>
+                            </div>
+                        </div>
+                        <div class="mt-4 min-h-[3rem] px-2">
+                            <p class="criterion-description text-base text-gray-300 font-medium leading-relaxed">Select a value to see description</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Empty space for balance -->
+                    <div></div>
+                </div>
+            </div>
+
+            <!-- Right Panel (30% width) -->
+            <div class="w-[30%] flex flex-col gap-4">
+                <!-- Final Score Section -->
+                <div class="bg-gemini-card rounded-lg border border-gray-700 p-6">
+                    <div class="text-center mb-6">
+                        <div class="result-card rounded-lg p-6 mb-4">
+                            <h2 class="text-sm font-semibold text-white mb-2">Final Story Points</h2>
+                            <div class="text-5xl font-bold text-white mb-2" id="final-score">0</div>
+                        </div>
+                        <button id="reset-btn" class="w-full bg-gemini-purple hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            Reset All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Calculation Summary -->
+                <div class="bg-gemini-card rounded-lg border border-gray-700 p-4">
+                    <h3 class="text-lg font-semibold text-white mb-4">Summary</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Raw Score:</span>
+                            <span class="font-semibold text-white" id="raw-score">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Weighted:</span>
+                            <span class="font-semibold text-white" id="weighted-score">0</span>
+                        </div>
+                        <div class="pt-2 border-t border-gray-600">
+                            <div class="text-xs text-gray-400 mb-1">Algorithm</div>
+                            <div class="text-sm text-gray-300">Weighted avg → Closest Fibonacci</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weights Reference -->
+                <div class="bg-gemini-card rounded-lg border border-gray-700 p-3">
+                    <h3 class="text-base font-semibold text-white mb-2">Weights</h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Time</span>
+                            <span class="font-medium text-blue-400">25%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Complexity</span>
+                            <span class="font-medium text-purple-400">25%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Risk</span>
+                            <span class="font-medium text-red-400">15%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Effort</span>
+                            <span class="font-medium text-green-400">10%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Uncertainty</span>
+                            <span class="font-medium text-yellow-400">25%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Calculation -->
+                <div class="bg-gemini-card rounded-lg border border-gray-700 p-4 flex-1">
+                    <h3 class="text-lg font-semibold text-white mb-4">Calculation Details</h3>
+                    <div id="calculation-details" class="text-sm text-gray-300 space-y-2">
+                        <div class="text-center text-gray-500 py-4">Select values to see detailed calculation</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Fibonacci sequence for mapping
+        const fibonacci = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89];
+        
+        // Store selected values
+        const selectedValues = {
+            time: 0,
+            complexity: 0,
+            risk: 0,
+            effort: 0,
+            uncertainty: 0
+        };
+
+        // Weights for each criterion
+        const weights = {
+            time: 0.25,
+            complexity: 0.25,
+            risk: 0.15,
+            effort: 0.10,
+            uncertainty: 0.25
+        };
+
+        // Description mappings for each criterion
+        const descriptions = {
+            time: {
+                1: "Task can be completed very quickly (< 1 hour)",
+                2: "Short task that requires minimal time (1-2 hours)",
+                3: "Small task with moderate time requirement (2-4 hours)",
+                5: "Medium task requiring half a day (4-8 hours)",
+                8: "Substantial task requiring a full day (1-2 days)",
+                13: "Large task requiring multiple days (2-5 days)",
+                21: "Very large task requiring a week or more (1-2 weeks)",
+                34: "Massive task requiring significant time investment (2+ weeks)"
+            },
+            complexity: {
+                1: "Very simple task with straightforward implementation",
+                2: "Simple task with minimal technical challenges",
+                3: "Moderately simple task with some technical considerations",
+                5: "Medium complexity requiring thoughtful design",
+                8: "Complex task with multiple technical challenges",
+                13: "Very complex task requiring advanced technical skills",
+                21: "Extremely complex task with significant technical hurdles",
+                34: "Highly complex task requiring deep expertise and innovation"
+            },
+            risk: {
+                1: "Very low risk - task is well understood with predictable outcomes",
+                2: "Low risk - minimal chance of issues or blockers",
+                3: "Moderate risk - some potential for minor complications",
+                5: "Medium risk - possibility of technical or business challenges",
+                8: "High risk - significant potential for issues or unknowns",
+                13: "Very high risk - major uncertainties that could impact delivery",
+                21: "Extreme risk - high probability of significant problems",
+                34: "Critical risk - task has major unknowns and potential failures"
+            },
+            effort: {
+                1: "Minimal effort required - can be done with basic resources",
+                2: "Low effort - requires standard development resources",
+                3: "Moderate effort - needs focused attention and resources",
+                5: "Medium effort - requires dedicated team member time",
+                8: "High effort - needs significant team involvement",
+                13: "Very high effort - requires multiple team members",
+                21: "Extreme effort - needs extensive team coordination",
+                34: "Maximum effort - requires full team dedication"
+            },
+            uncertainty: {
+                1: "Very clear requirements - all details are well defined",
+                2: "Clear requirements - minor details may need clarification",
+                3: "Mostly clear requirements - some ambiguity exists",
+                5: "Moderate uncertainty - several aspects need clarification",
+                8: "High uncertainty - many requirements are unclear",
+                13: "Very high uncertainty - significant requirements gaps",
+                21: "Extreme uncertainty - major requirements are undefined",
+                34: "Complete uncertainty - requirements are largely unknown"
+            }
+        };
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click listeners to all fibonacci buttons
+            document.querySelectorAll('.fibonacci-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const value = parseInt(this.dataset.value);
+                    const criterion = this.closest('.fibonacci-selection').dataset.criterion;
+                    
+                    // Remove selected class from siblings
+                    this.closest('.fibonacci-selection').querySelectorAll('.fibonacci-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                        btn.classList.add('bg-gray-700');
+                    });
+                    
+                    // Add selected class to clicked button
+                    this.classList.add('selected');
+                    this.classList.remove('bg-gray-700');
+                    
+                    // Update selected value
+                    selectedValues[criterion] = value;
+                    
+                    // Update display
+                    const selectedValueSpan = this.closest('.criterion-card').querySelector('.selected-value');
+                    selectedValueSpan.textContent = value;
+                    
+                    // Update description
+                    const descriptionElement = this.closest('.criterion-card').querySelector('.criterion-description');
+                    descriptionElement.textContent = descriptions[criterion][value];
+                    
+                    // Calculate and update result
+                    calculateResult();
+                });
+            });
+
+            // Reset button
+            document.getElementById('reset-btn').addEventListener('click', function() {
+                // Reset all values
+                Object.keys(selectedValues).forEach(key => {
+                    selectedValues[key] = 0;
+                });
+                
+                // Remove selected classes
+                document.querySelectorAll('.fibonacci-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                    btn.classList.add('bg-gray-700');
+                });
+                
+                // Reset display values
+                document.querySelectorAll('.selected-value').forEach(span => {
+                    span.textContent = '-';
+                });
+                
+                // Reset descriptions
+                document.querySelectorAll('.criterion-description').forEach(desc => {
+                    desc.textContent = 'Select a value to see description';
+                });
+                
+                // Reset result
+                calculateResult();
+            });
+        });
+
+        function calculateResult() {
+            // Calculate raw score (sum of all values)
+            const rawScore = Object.values(selectedValues).reduce((sum, value) => sum + value, 0);
+            
+            // Calculate weighted score
+            let weightedScore = 0;
+            Object.keys(selectedValues).forEach(criterion => {
+                weightedScore += selectedValues[criterion] * weights[criterion];
+            });
+            
+            // Find closest Fibonacci number for final score
+            const finalScore = findClosestFibonacci(weightedScore);
+            
+            // Update displays
+            document.getElementById('raw-score').textContent = rawScore;
+            document.getElementById('weighted-score').textContent = Math.round(weightedScore * 100) / 100;
+            document.getElementById('final-score').textContent = finalScore;
+            
+            // Update calculation details
+            updateCalculationDetails(rawScore, weightedScore, finalScore);
+        }
+
+        function findClosestFibonacci(value) {
+            if (value <= 0) return 0;
+            
+            let closest = fibonacci[0];
+            let minDiff = Math.abs(value - closest);
+            
+            for (let i = 1; i < fibonacci.length; i++) {
+                const diff = Math.abs(value - fibonacci[i]);
+                if (diff < minDiff || (diff === minDiff && fibonacci[i] > closest)) {
+                    minDiff = diff;
+                    closest = fibonacci[i];
+                }
+            }
+            
+            return closest;
+        }
+
+        function updateCalculationDetails(rawScore, weightedScore, finalScore) {
+            const detailsDiv = document.getElementById('calculation-details');
+            
+            if (rawScore === 0) {
+                detailsDiv.innerHTML = '<div class="text-center text-gray-500 py-4">Select values to see detailed calculation</div>';
+                return;
+            }
+            
+            let details = '<div class="space-y-2">';
+            
+            // Individual calculations
+            Object.keys(selectedValues).forEach(criterion => {
+                const value = selectedValues[criterion];
+                const weight = weights[criterion];
+                const weightedValue = value * weight;
+                if (value > 0) {
+                    details += `<div class="flex justify-between py-1">
+                        <span class="capitalize">${criterion}:</span>
+                        <span>${value} × ${weight} = ${weightedValue.toFixed(1)}</span>
+                    </div>`;
+                }
+            });
+            
+            // Summary section
+            details += `<div class="flex justify-between py-1 border-t border-gray-600 pt-2 mt-3">
+                <span class="font-medium">Weighted Total:</span>
+                <span class="font-medium">${weightedScore.toFixed(1)}</span>
+            </div>`;
+            details += `<div class="flex justify-between py-1 font-semibold text-gemini-purple">
+                <span>Closest Fibonacci:</span>
+                <span>${finalScore}</span>
+            </div>`;
+            
+            details += '</div>';
+            
+            detailsDiv.innerHTML = details;
+        }
+    </script>
+</body>
+</html>
