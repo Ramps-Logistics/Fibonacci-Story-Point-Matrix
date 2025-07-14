@@ -247,7 +247,8 @@
                     <div class="text-center mb-6">
                         <div class="result-card rounded-lg p-6 mb-4">
                             <h2 class="text-sm font-semibold text-white mb-2">Final Story Points</h2>
-                            <div class="text-5xl font-bold text-white mb-2" id="final-score">0</div>
+                            <div class="text-5xl font-bold text-white mb-2" id="final-score">-</div>
+                            <div class="text-xs text-gray-200" id="score-status">Complete all criteria to calculate</div>
                         </div>
                         <button id="reset-btn" class="w-full bg-gemini-purple hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                             Reset All
@@ -261,11 +262,11 @@
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
                             <span class="text-sm text-gray-400">Raw Score:</span>
-                            <span class="font-semibold text-white" id="raw-score">0</span>
+                            <span class="font-semibold text-white" id="raw-score">-</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-sm text-gray-400">Weighted:</span>
-                            <span class="font-semibold text-white" id="weighted-score">0</span>
+                            <span class="font-semibold text-white" id="weighted-score">-</span>
                         </div>
                         <div class="pt-2 border-t border-gray-600">
                             <div class="text-xs text-gray-400 mb-1">Algorithm</div>
@@ -305,7 +306,7 @@
                 <div class="bg-gemini-card rounded-lg border border-gray-700 p-4 flex-1">
                     <h3 class="text-lg font-semibold text-white mb-4">Calculation Details</h3>
                     <div id="calculation-details" class="text-sm text-gray-300 space-y-2">
-                        <div class="text-center text-gray-500 py-4">Select values to see detailed calculation</div>
+                        <div class="text-center text-gray-500 py-4">Complete all criteria to see detailed calculation</div>
                     </div>
                 </div>
             </div>
@@ -448,9 +449,27 @@
                 // Reset result
                 calculateResult();
             });
+            
+            // Initialize with empty state
+            calculateResult();
         });
 
         function calculateResult() {
+            // Check if all criteria have values assigned
+            const allValuesAssigned = Object.values(selectedValues).every(value => value > 0);
+            
+            if (!allValuesAssigned) {
+                // Show incomplete state
+                document.getElementById('raw-score').textContent = '-';
+                document.getElementById('weighted-score').textContent = '-';
+                document.getElementById('final-score').textContent = '-';
+                document.getElementById('score-status').textContent = 'Complete all criteria to calculate';
+                
+                // Update calculation details to show what's missing
+                updateCalculationDetails(0, 0, 0, false);
+                return;
+            }
+            
             // Calculate raw score (sum of all values)
             const rawScore = Object.values(selectedValues).reduce((sum, value) => sum + value, 0);
             
@@ -467,9 +486,10 @@
             document.getElementById('raw-score').textContent = rawScore;
             document.getElementById('weighted-score').textContent = Math.round(weightedScore * 100) / 100;
             document.getElementById('final-score').textContent = finalScore;
+            document.getElementById('score-status').textContent = 'Based on weighted criteria';
             
             // Update calculation details
-            updateCalculationDetails(rawScore, weightedScore, finalScore);
+            updateCalculationDetails(rawScore, weightedScore, finalScore, true);
         }
 
         function findClosestFibonacci(value) {
@@ -489,11 +509,28 @@
             return closest;
         }
 
-        function updateCalculationDetails(rawScore, weightedScore, finalScore) {
+        function updateCalculationDetails(rawScore, weightedScore, finalScore, allValuesAssigned = true) {
             const detailsDiv = document.getElementById('calculation-details');
             
-            if (rawScore === 0) {
-                detailsDiv.innerHTML = '<div class="text-center text-gray-500 py-4">Select values to see detailed calculation</div>';
+            if (!allValuesAssigned) {
+                const missingCriteria = [];
+                Object.keys(selectedValues).forEach(criterion => {
+                    if (selectedValues[criterion] === 0) {
+                        missingCriteria.push(criterion);
+                    }
+                });
+                
+                let details = '<div class="space-y-2">';
+                details += '<div class="text-yellow-400 font-medium mb-2">Missing Values:</div>';
+                details += '<div class="text-sm text-gray-400">';
+                missingCriteria.forEach(criterion => {
+                    details += `<div class="capitalize py-1">• ${criterion}</div>`;
+                });
+                details += '</div>';
+                details += '<div class="text-xs text-gray-500 mt-4 text-center">All criteria must be assigned values to calculate story points</div>';
+                details += '</div>';
+                
+                detailsDiv.innerHTML = details;
                 return;
             }
             
